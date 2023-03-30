@@ -12,8 +12,8 @@ router.post("/", async (req, res) => {
   const username = req.body.username;
   const user = await User.findOne({ where: { username: username } });
   if (user) throw new NotUniqueError(`Username ${username}`);
-  const createUser = await User.create(req.body);
-  res.json(createUser);
+  const created = await User.create(req.body);
+  res.json(created);
 });
 
 router.get("/:id", async (req, res) => {
