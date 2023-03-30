@@ -1,16 +1,9 @@
-require('dotenv').config()
-const { Sequelize } = require('sequelize')
+const http = require('http')
+const app = require('./app')
+const config = require('./utils/config')
 
-const sequelize = new Sequelize(process.env.DATABASE_URL)
+const server = http.createServer(app)
 
-const main = async () => {
-  try {
-    await sequelize.authenticate()
-    console.log('Connection has been established successfully.')
-    sequelize.close()
-  } catch (error) {
-    console.error('Unable to connect to the database:', error)
-  }
-}
-
-main()
+server.listen(config.PORT, () => {
+  console.log(`Server running on port ${config.PORT}`)
+})
