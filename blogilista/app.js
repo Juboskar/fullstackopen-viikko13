@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const blogsRouter = require("./controllers/blogs");
-const errorHandler = require("./utils/errorHandler");
+const errorHandler = require("./middlewares/errorHandler");
 
 app.use(express.json());
 app.use("/api/blogs", blogsRouter);
