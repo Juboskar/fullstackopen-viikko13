@@ -13,8 +13,9 @@ blogsRouter.post("/", async (req, res) => {
 
 blogsRouter.put("/:id", async (req, res) => {
   const blog = await Blog.findByPk(req.params.id);
-  const incrementResult = await blog.increment("likes");
-  res.json(incrementResult);
+  blog.likes = parseInt(req.body.likes);
+  blog.save()
+  res.json(blog);
 });
 
 blogsRouter.delete("/:id", async (req, res) => {
