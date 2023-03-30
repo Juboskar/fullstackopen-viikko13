@@ -1,6 +1,6 @@
 require("express-async-errors");
 const router = require("express").Router();
-const Blog = require("../models/blog");
+const { Blog } = require("../models");
 const { ValueError, NotFoundError } = require("../utils/errors");
 
 router.get("/", async (req, res) => {

@@ -12,4 +12,11 @@ function NotFoundError(value) {
   };
 }
 
-module.exports = { ValueError, NotFoundError };
+function NotUniqueError(value) {
+  return {
+    name: "NotUniqueError",
+    message: `${value} not unique`,
+  };
+}
+
+module.exports = { ValueError, NotFoundError, NotUniqueError };
