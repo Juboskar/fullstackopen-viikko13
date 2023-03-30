@@ -6,4 +6,18 @@ blogsRouter.get('/', async (req, res) => {
     res.json(blogs)
 })
 
+blogsRouter.post('/', async (req, res) => {
+    const blog = await Blog.create(req.body)
+    res.json(blog)
+})
+
+blogsRouter.delete('/:id', async (req, res) => {
+    await Blog.destroy({
+        where: {
+            id: req.params.id
+        }
+    });
+    res.send(204)
+})
+
 module.exports = blogsRouter
