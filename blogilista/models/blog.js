@@ -1,37 +1,40 @@
-const { Sequelize, Model, DataTypes } = require('sequelize')
-const config = require('../utils/config')
+const { Sequelize, Model, DataTypes } = require("sequelize");
+const config = require("../utils/config");
 
-const sequelize = new Sequelize(config.DATABASE_URL)
+const sequelize = new Sequelize(config.DATABASE_URL);
 
-class Blog extends Model { }
+class Blog extends Model {}
 
-Blog.init({
+Blog.init(
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     author: {
-        type: DataTypes.TEXT,
-        allowNull: false
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     title: {
-        type: DataTypes.TEXT,
-        allowNull: false
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     url: {
-        type: DataTypes.TEXT,
-        allowNull: false
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
     likes: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0
-    }
-}, {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+  },
+  {
     sequelize,
     underscored: true,
     timestamps: false,
-    modelName: 'blog'
-})
+    modelName: "blog",
+  }
+);
 
-module.exports = Blog
+module.exports = Blog;
