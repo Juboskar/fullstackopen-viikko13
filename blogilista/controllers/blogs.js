@@ -1,14 +1,14 @@
 require("express-async-errors");
-const blogsRouter = require("express").Router();
+const router = require("express").Router();
 const Blog = require("../models/blog");
 const { ValueError, NotFoundError } = require("../utils/errors");
 
-blogsRouter.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   const blogs = await Blog.findAll();
   res.json(blogs);
 });
 
-blogsRouter.post("/", async (req, res) => {
+router.post("/", async (req, res) => {
   const author = req.body.author;
   const title = req.body.title;
   const url = req.body.url;
@@ -21,7 +21,7 @@ blogsRouter.post("/", async (req, res) => {
   res.json(blog);
 });
 
-blogsRouter.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const likes = parseInt(req.body.likes);
   const id = req.params.id;
   if (!likes) throw new ValueError("likes");
@@ -32,7 +32,7 @@ blogsRouter.put("/:id", async (req, res) => {
   res.json(updated);
 });
 
-blogsRouter.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   const deleted = await Blog.destroy({
     where: {
@@ -43,4 +43,4 @@ blogsRouter.delete("/:id", async (req, res) => {
   res.sendStatus(204);
 });
 
-module.exports = blogsRouter;
+module.exports = router;
