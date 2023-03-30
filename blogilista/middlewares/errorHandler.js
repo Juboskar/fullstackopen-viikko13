@@ -10,6 +10,17 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === "NotUniqueError") {
     return res.status(400).json({ error: error.message });
   }
+  if (error.name === "SequelizeValidationError") {
+    if (
+      error.message ===
+      "Validation error: Validation isEmail on username failed"
+    )
+      return res
+        .status(400)
+        .json({
+          error: `${error.errors[0].value} is not a valid email address`,
+        });
+  }
   return res.status(500).json({ error: "Unknown error occurred" });
 };
 
