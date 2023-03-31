@@ -1,14 +1,21 @@
 require("express-async-errors");
 const router = require("express").Router();
-const { Blog } = require("../models");
+const { Blog, User } = require("../models");
+const tokenExtractor = require("../middlewares/tokenExtractor");
 const { ValueError, NotFoundError } = require("../utils/errors");
 
 router.get("/", async (req, res) => {
-  const blogs = await Blog.findAll();
+  const blogs = await Blog.findAll({
+    attributes: { exclude: ["userId"] },
+    include: {
+      model: User,
+      attributes: ["name"],
+    },
+  });
   res.json(blogs);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", tokenExtractor, async (req, res) => {
   const author = req.body.author;
   const title = req.body.title;
   const url = req.body.url;
@@ -17,7 +24,9 @@ router.post("/", async (req, res) => {
   if (!title) throw new ValueError("title");
   if (!url) throw new ValueError("url");
 
-  const blog = await Blog.create(req.body);
+  const user = await User.findByPk(req.decodedToken.id);
+  const blog = await Blog.create({ ...req.body, userId: user.id });
+
   res.json(blog);
 });
 
