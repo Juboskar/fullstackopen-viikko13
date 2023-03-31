@@ -1,5 +1,6 @@
 require("express-async-errors");
 const router = require("express").Router();
+const { Op } = require("sequelize");
 const { Blog, User } = require("../models");
 const tokenExtractor = require("../middlewares/tokenExtractor");
 const { ValueError, NotFoundError } = require("../utils/errors");
@@ -10,6 +11,11 @@ router.get("/", async (req, res) => {
     include: {
       model: User,
       attributes: ["name"],
+    },
+    where: {
+      title: {
+        [Op.iLike]: req.query.search ? `%${req.query.search}%` : "",
+      },
     },
   });
   res.json(blogs);
