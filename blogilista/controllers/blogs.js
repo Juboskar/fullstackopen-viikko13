@@ -41,11 +41,12 @@ router.put("/:id", async (req, res) => {
   res.json(updated);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", tokenExtractor, async (req, res) => {
   const id = req.params.id;
   const deleted = await Blog.destroy({
     where: {
       id: id,
+      userId: req.decodedToken.id,
     },
   });
   if (deleted === 0) throw new NotFoundError(`Blog id: ${id}`);
