@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "migration:down": "node utils/rollback.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
