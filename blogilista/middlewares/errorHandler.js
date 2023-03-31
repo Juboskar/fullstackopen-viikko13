@@ -15,11 +15,16 @@ const errorHandler = (error, req, res, next) => {
       error.message ===
       "Validation error: Validation isEmail on username failed"
     )
-      return res
-        .status(400)
-        .json({
-          error: `${error.errors[0].value} is not a valid email address`,
-        });
+      return res.status(400).json({
+        error: `${error.errors[0].value} is not a valid email address`,
+      });
+    if (
+      (error.message === "Validation error: Validation min on year failed") |
+      (error.message === "Validation error: Validation max on year failed")
+    )
+      return res.status(400).json({
+        error: `Year must be between 1991 and ${new Date().getFullYear()}`,
+      });
   }
   return res.status(500).json({ error: "Unknown error occurred" });
 };
