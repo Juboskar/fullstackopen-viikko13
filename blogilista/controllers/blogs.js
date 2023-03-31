@@ -6,7 +6,7 @@ const tokenExtractor = require("../middlewares/tokenExtractor");
 const { ValueError, NotFoundError } = require("../utils/errors");
 
 router.get("/", async (req, res) => {
-  const search = req.query.search ? `%${req.query.search}%` : "";
+  const search = req.query.search ? req.query.search : "";
   const blogs = await Blog.findAll({
     attributes: { exclude: ["userId"] },
     include: {
@@ -16,10 +16,10 @@ router.get("/", async (req, res) => {
     where: {
       [Op.or]: {
         author: {
-          [Op.iLike]: search,
+          [Op.iLike]: `%${search}%`,
         },
         title: {
-          [Op.iLike]: search,
+          [Op.iLike]: `%${search}%`,
         },
       },
     },
