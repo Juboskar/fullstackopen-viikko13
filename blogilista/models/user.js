@@ -25,6 +25,9 @@ User.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    session: {
+      type: DataTypes.TEXT,
+    },
   },
   {
     sequelize,
