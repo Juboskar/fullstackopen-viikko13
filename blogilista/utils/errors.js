@@ -15,7 +15,7 @@ function NotFoundError(value) {
 function NotUniqueError(value) {
   return {
     name: "NotUniqueError",
-    message: `${value} not unique`,
+    message: `${value} already exists`,
   };
 }
 
