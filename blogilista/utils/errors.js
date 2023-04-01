@@ -19,4 +19,11 @@ function NotUniqueError(value) {
   };
 }
 
-module.exports = { ValueError, NotFoundError, NotUniqueError };
+function NotAuthorizedError(value) {
+  return {
+    name: "NotAuthorizedError",
+    message: `Authorization failed: ${value}`,
+  };
+}
+
+module.exports = { ValueError, NotFoundError, NotUniqueError, NotAuthorizedError };

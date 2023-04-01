@@ -6,7 +6,9 @@ const {
   ValueError,
   NotFoundError,
   NotUniqueError,
+  NotAuthorizedError
 } = require("../utils/errors");
+const tokenExtractor = require("../middlewares/tokenExtractor");
 
 router.get("/", async (req, res) => {
   const users = await User.findAll({
@@ -52,11 +54,14 @@ router.post("/", async (req, res) => {
   res.json(created);
 });
 
-router.put("/:username", async (req, res) => {
+router.put("/:username", tokenExtractor, async (req, res) => {
   const name = req.body.name;
   const username = req.params.username;
   if (!name) throw new ValueError("name");
-  const user = await User.findOne({ where: { username: username } });
+  const user = await User.findOne({
+    where: { username: username, id: req.decodedToken.id },
+  });
+  if (user.disabled) throw NotAuthorizedError("Account not available");
   if (!user) throw new NotFoundError(`User: ${username}`);
   user.name = name;
   const updated = await user.save();

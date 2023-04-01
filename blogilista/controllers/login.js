@@ -2,7 +2,7 @@ require("express-async-errors");
 const jwt = require("jsonwebtoken");
 const router = require("express").Router();
 
-const { ValueError } = require("../utils/errors");
+const { ValueError, NotAuthorizedError } = require("../utils/errors");
 const { SECRET } = require("../utils/config");
 const User = require("../models/user");
 
@@ -19,6 +19,7 @@ router.post("/", async (request, response) => {
     },
   });
   if (!user) throw ValueError("username");
+  if (user.disabled) throw NotAuthorizedError("Account not available");
 
   const passwordCorrect = password === "salainen";
 

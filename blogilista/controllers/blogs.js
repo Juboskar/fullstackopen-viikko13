@@ -3,7 +3,11 @@ const router = require("express").Router();
 const { Op } = require("sequelize");
 const { Blog, User } = require("../models");
 const tokenExtractor = require("../middlewares/tokenExtractor");
-const { ValueError, NotFoundError } = require("../utils/errors");
+const {
+  ValueError,
+  NotFoundError,
+  NotAuthorizedError,
+} = require("../utils/errors");
 
 router.get("/", async (req, res) => {
   const search = req.query.search ? req.query.search : "";
@@ -38,6 +42,8 @@ router.post("/", tokenExtractor, async (req, res) => {
   if (!url) throw new ValueError("url");
 
   const user = await User.findByPk(req.decodedToken.id);
+  if (user.disabled) throw NotAuthorizedError("Account not available");
+
   const blog = await Blog.create({ ...req.body, userId: user.id });
 
   res.json(blog);
@@ -55,11 +61,15 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", tokenExtractor, async (req, res) => {
+  const user = await User.findByPk(req.decodedToken.id);
+  console.log(user.disabled);
+  if (user.disabled) throw NotAuthorizedError("Account not available");
+
   const id = req.params.id;
   const deleted = await Blog.destroy({
     where: {
       id: id,
-      userId: req.decodedToken.id,
+      userId: user.id,
     },
   });
   if (deleted === 0) throw new NotFoundError(`Blog id: ${id}`);
