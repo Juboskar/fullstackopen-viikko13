@@ -17,6 +17,23 @@ router.get("/", async (req, res) => {
   res.json(users);
 });
 
+router.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findByPk(id, {
+    include: {
+      model: Blog,
+      as: "readings",
+      attributes: { exclude: ["userId", "createdAt", "updatedAt"] },
+      through: {
+        attributes: [],
+      },
+    },
+  });
+  if (!user) throw new NotFoundError(`User id: ${id}`);
+
+  res.json(user);
+});
+
 router.post("/", async (req, res) => {
   const username = req.body.username;
   const user = await User.findOne({ where: { username: username } });
