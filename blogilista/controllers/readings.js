@@ -12,12 +12,12 @@ router.post("/", async (req, res) => {
 
   try {
     const reading = await Reading.create({ userId, blogId });
+    res.json(reading);
   } catch (error) {
     if (error.name === "SequelizeForeignKeyConstraintError")
       throw NotFoundError("blog or user");
+    throw error;
   }
-
-  res.json(reading);
 });
 
 module.exports = router;
