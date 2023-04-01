@@ -1,4 +1,5 @@
 require("express-async-errors");
+const { Op } = require("sequelize");
 const router = require("express").Router();
 const { User, Blog } = require("../models");
 const {
@@ -18,6 +19,12 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+  const search = (() => {
+    if (req.query.read === "true") return [true];
+    if (req.query.read === "false") return [false];
+    return [true, false];
+  })();
+
   const id = req.params.id;
   const user = await User.findByPk(id, {
     include: {
@@ -26,6 +33,9 @@ router.get("/:id", async (req, res) => {
       attributes: { exclude: ["userId", "createdAt", "updatedAt"] },
       through: {
         attributes: { exclude: ["userId", "blogId"] },
+        where: {
+          read: { [Op.in]: search },
+        },
       },
     },
   });
