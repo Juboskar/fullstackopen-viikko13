@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../utils/config");
+const { NotAuthorizedError } = require("../utils/errors");
 
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get("authorization");
@@ -9,10 +10,10 @@ const tokenExtractor = (req, res, next) => {
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
     } catch (error) {
       console.log(error);
-      return res.status(401).json({ error: "token invalid" });
+      throw NotAuthorizedError("Token invalid");
     }
   } else {
-    return res.status(401).json({ error: "token missing" });
+    throw NotAuthorizedError("Token missing");
   }
   next();
 };

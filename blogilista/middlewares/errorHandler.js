@@ -10,6 +10,9 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === "NotUniqueError") {
     return res.status(400).json({ error: error.message });
   }
+  if (error.name === "NotAuthorizedError") {
+    return res.status(401).json({ error: error.message });
+  }
   if (error.name === "SequelizeValidationError") {
     if (
       error.message ===
