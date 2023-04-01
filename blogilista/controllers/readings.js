@@ -1,7 +1,7 @@
 require("express-async-errors");
 const router = require("express").Router();
 const { Reading } = require("../models");
-const { ValueError } = require("../utils/errors");
+const { ValueError, NotFoundError } = require("../utils/errors");
 
 router.post("/", async (req, res) => {
   const blogId = req.body.blog_id;
@@ -10,7 +10,13 @@ router.post("/", async (req, res) => {
   if (!blogId) throw new ValueError("blog id");
   if (!userId) throw new ValueError("user id");
 
-  const reading = await Reading.create({ userId, blogId });
+  try {
+    const reading = await Reading.create({ userId, blogId });
+  } catch (error) {
+    if (error.name === "SequelizeForeignKeyConstraintError")
+      throw NotFoundError("blog or user");
+  }
+
   res.json(reading);
 });
 
