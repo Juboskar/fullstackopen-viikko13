@@ -30,4 +30,15 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  const read = req.body.read;
+  const id = req.params.id;
+  if ((read !== false) & !read) throw new ValueError("read");
+  const reading = await Reading.findByPk(id);
+  if (!reading) throw new NotFoundError(`Reading id: ${id}`);
+  reading.read = read;
+  const updated = await reading.save();
+  res.json(updated);
+});
+
 module.exports = router;
